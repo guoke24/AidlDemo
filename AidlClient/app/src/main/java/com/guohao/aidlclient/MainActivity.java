@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("guohao","test2");
         boolean b = bindBookService();
         if(b){
-            Toast.makeText(this,"bind succ",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"bind succ",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -58,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
         try {
             int res = mIBookManager.add(1,1);
             Log.d("guohao","res = " + res);
+            Toast.makeText(this,"mIBookManager.add(1,1)=" + res,Toast.LENGTH_SHORT).show();
+
         } catch (RemoteException e) {
             Log.d("guohao","e = " + e.toString());
             e.printStackTrace();
