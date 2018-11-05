@@ -1,0 +1,2 @@
+# AidlDemo
+test aidl use
