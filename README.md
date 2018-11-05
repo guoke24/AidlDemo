@@ -5,4 +5,4 @@
 * client端是 aidl 的调用者。
 * 要注意的一点是，两个端的aidl文件的包名要完全一致
 * 自己写好IBookManager.aidl文件，Andstudio 编译时会自动生成IBookManager.java文件
-
+* IBookManager.aidl文件 替换为 IBookManager.java文件，编译会报错：找不到 IBookManager.java文件所在的包
