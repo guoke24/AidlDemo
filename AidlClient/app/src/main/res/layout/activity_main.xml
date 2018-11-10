@@ -22,11 +22,19 @@
         android:onClick="test"
         />
     <Button
+        android:id="@+id/w"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="add"
         android:onClick="test2"
         app:layout_constraintStart_toEndOf="@id/q"
+        />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="wrong add"
+        android:onClick="test3"
+        app:layout_constraintStart_toEndOf="@id/w"
         />
 
 </android.support.constraint.ConstraintLayout>

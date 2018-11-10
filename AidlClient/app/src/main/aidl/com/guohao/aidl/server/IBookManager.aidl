@@ -10,4 +10,9 @@ interface IBookManager {
      * and return values in AIDL.
      */
     int add(int num1,int num2);
+
+    // 服务端定义了该函数会多一个参数 wrong_add(int num1,int num2)
+    int wrong_add(int num1);
+
+    //int more_fun(); 服务端定义了该函数，这里不定义，为了测试是否会报错
 }
