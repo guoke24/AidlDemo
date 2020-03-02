@@ -24,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
             // 获取远程服务Binder的代理：service
             Log.d("guohao","onServiceConnected");
             // service 转化为 本地的 mIBookManager 接口
+            // asInterface 返回的是代理类 IBookManager.Stub.Proxy
+            // 通过 IBookManager 接口依赖
             mIBookManager = IBookManager.Stub.asInterface(service);
             // 注意：本地的 IBookManager 接口，只定义了两个函数，
             // 而服务端的  IBookManager 接口，定义了三个函数，
