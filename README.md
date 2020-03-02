@@ -361,10 +361,10 @@ client 端工作
 其中 bindService 函数的 [老罗的源码分析](https://blog.csdn.net/luoshengyang/article/details/6745181)，[另一篇源码分析（图清楚）](https://www.cnblogs.com/zhchoutai/p/8681312.html)
 
 小结：
-conn 在 ServiceDispatcher 实例中，
-ServiceDispatcher 实例在 InnerConnection 实例中，
+mConnection 封装在 ServiceDispatcher 实例中，
+ServiceDispatcher 实例封装在 InnerConnection 实例中，
 AMS 中持有 InnerConnection 实例，
-在 AMS 中通过 InnerConnection - ServiceDispatcher - RunConnection.run - conn.onServiceConnected 层层调用，完成绑定通知。
+在 AMS 中通过 InnerConnection - ServiceDispatcher - RunConnection.run - mConnection.onServiceConnected 层层调用，通知绑定完成。
 
 <br>
 跨进程通信过程：
