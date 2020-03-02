@@ -356,86 +356,8 @@ client 端工作
 # 时序图小结
 简单的绑定过程：
 
-```mermaid
-sequenceDiagram
+![](https://guoke24.top/img/%E7%AE%80%E5%8D%95%E7%9A%84%E7%BB%91%E5%AE%9A%E8%BF%87%E7%A8%8B.png?cache-bust=1583133356438)
 
-aidlclient ->> aidlclient:         intent.setAction("com.guohao.aidl.server.aidlService");
-
-aidlclient ->> aidlclient:         intent.setPackage("com.guohao.aidlserver")
-
-aidlclient ->> aidlserver: bindService(intent, mConnection, BIND_AUTO_CREATE)
-
-aidlserver ->> aidlserver: onBind
-
-Note left of aidlserver: 实现 IBookManager 的三个接口函数
-
-aidlserver ->> aidlclient: conn.onServiceConnected( service )
-
-```
-
-<br>
-
-详细的绑定过程：
-```mermaid
-sequenceDiagram
-aidlclient ->> aidlclient:         intent.setAction("com.guohao.aidl.server.aidlService");
-
-aidlclient ->> aidlclient:         intent.setPackage("com.guohao.aidlserver")
-
-aidlclient ->> ContextImpl: 3，ContextWrapper.bindService(intent, conn, BIND_AUTO_CREATE)
-
-ContextImpl ->> ContextImpl: sd = mPackageInfo.getServiceDispatcher(conn,
-Note right of ContextImpl: mPackageInfo 就是 LoadedApk
-Note right of ContextImpl: 在 LoadedApk 的 getServiceDispatcher 函数中：
-Note right of ContextImpl: sd = new ServiceDispatcher(conn, context,
-Note right of ContextImpl: mServices.put(context, map)，context 是某个Activity
-Note right of ContextImpl: map.put(conn, sd)
-Note right of ContextImpl: return sd.getIServiceConnection
-Note right of ContextImpl: 在 ServiceDispatcher 的 getIServiceConnection 函数中：
-Note right of ContextImpl: mIServiceConnection = new InnerConnection(this)
-Note right of ContextImpl: 	mConnection = conn;
-Note right of ContextImpl: return mIServiceConnection
-
-Note left of ContextImpl: 即 sd 就是 InnerConnection
-
-
-ContextImpl ->> AMS : bindService（ token, intent, sd , ...）
-
-AMS ->> AMS : ConnectionRecord c = new ConnectionRecord( ... , sd , ... );
-
-AMS -->> ActivtyThread: 8，app.thread.scheduleCreateService(r, r.serviceInfo);
-
-ActivtyThread ->> aidlserver: ActivtyThread.H - onCreate
-
-AMS ->> ActivtyThread: requestServiceBindingsLocked(r)
-
-ActivtyThread ->>+ aidlserver: ActivtyThread.H - onBind
-
-aidlserver ->> aidlserver: aidlServer = new IBookManager.Stub()
-
-Note left of aidlserver: 实现 IBookManager 的三个接口函数
-
-aidlserver ->>- ActivtyThread: 14，(IBinder)aidlServer
-
-ActivtyThread ->> AMS: publishService( service = aidlServer )
-
-AMS ->> AMS: ConnectionRecord c = clist.get(i)
-AMS ->> AMS: 17，c.conn.connected(r.name, service)
-
-Note left of AMS: c.conn 就是 sd，即 InnerConnection
-Note left of AMS: -> InnerConnection.connected(r.name, service)
-Note left of AMS: -> ServiceDispatcher.connected( service )
-Note left of AMS: -> RunConnection.run( service )
-Note left of AMS: -> ServiceDispatcher.doConnected( service )
-Note left of AMS: -> mConnection.onServiceConnected( service )
-
-AMS ->> aidlclient: conn.onServiceConnected( service )
-
-aidlclient ->> aidlclient: mIBookManager = IBookManager.Stub.asInterface(service)
-
-#AMS ->> aidlclient: 绑定失败，onServiceDisconnected
-
-```
 其中 bindService 函数的 [老罗的源码分析](https://blog.csdn.net/luoshengyang/article/details/6745181)，[另一篇源码分析（图清楚）](https://www.cnblogs.com/zhchoutai/p/8681312.html)
 
 小结：
@@ -447,28 +369,7 @@ AMS 中持有 InnerConnection 实例，
 <br>
 跨进程通信过程：
 
-```mermaid
-sequenceDiagram
-
-aidlclient ->> (C端)IBookManager.Stub.Proxy : mIBookManager.add(1,1)
-
-(C端)IBookManager.Stub.Proxy ->> (C端)IBookManager.Stub.Proxy : _data.writeInt(num1);
-(C端)IBookManager.Stub.Proxy ->> (C端)IBookManager.Stub.Proxy : _data.writeInt(num2);
-(C端)IBookManager.Stub.Proxy ->> Binder 驱动 : mRemote.transact(Stub.TRANSACTION_add, _data, _reply, 0);
-
-Note right of Binder 驱动 : Binder 内部共享内存
-
-Binder 驱动 ->> (S端)IBookManager.Stub : onTransact
-
-(S端)IBookManager.Stub ->>+ (S端)IBookManager.Stub : case TRANSACTION_add:
-
-(S端)IBookManager.Stub ->> (S端)IBookManager.Stub : _arg0 = data.readInt()，_arg1 = data.readInt();
-
-(S端)IBookManager.Stub ->>- aidlserver : int _result = this.add(_arg0, _arg1);
-
-aidlserver ->> aidlserver : （IBookManager.Stub）aidlServer 实现的 add 函数
-
-```
+![](https://guoke24.top/img/%E8%B7%A8%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%E8%BF%87%E7%A8%8B.png?cache-bust=1583133356438)
 
 # 测试了接口不一致，不会报错
 * server 端的 IBookManager接口，函数声明为：
