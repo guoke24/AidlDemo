@@ -43,7 +43,10 @@ interface IBookManager {
 ```
 
 <br>
+
 定义好的 aidl 接口，编译后会生成 java 文件：{工程根目录}/app/build/generated/source/aidl/debug/com/guohao/aidl/server/IBookManager.java
+
+**注意，该编译后会生成 java 文件也是两端都有的！**
 
 源码如下：
 有点长，先看 IBookManager.java 接口的结构：
@@ -63,6 +66,7 @@ interface IBookManager {
 
 
 具体源码：
+
 ```
 // IBookManager.java
 
@@ -229,6 +233,7 @@ server 端的工作：
 > new 一个 Stub 实例，并实现 aidl 中定义的函数，然后在 onBind 函数中返回 IBinder 类型的该 Stub 实例
 
 源码：
+
 ```
 // AidlService.java
 
@@ -354,6 +359,7 @@ client 端工作
 ```
 
 # 时序图小结
+
 简单的绑定过程：
 
 ![](https://guoke24.top/img/%E7%AE%80%E5%8D%95%E7%9A%84%E7%BB%91%E5%AE%9A%E8%BF%87%E7%A8%8B.png?cache-bust=1583133356438)
@@ -361,18 +367,21 @@ client 端工作
 其中 bindService 函数的 [老罗的源码分析](https://blog.csdn.net/luoshengyang/article/details/6745181)，[另一篇源码分析（图清楚）](https://www.cnblogs.com/zhchoutai/p/8681312.html)
 
 小结：
+
 mConnection 封装在 ServiceDispatcher 实例中，
 ServiceDispatcher 实例封装在 InnerConnection 实例中，
 AMS 中持有 InnerConnection 实例，
 在 AMS 中通过 InnerConnection - ServiceDispatcher - RunConnection.run - mConnection.onServiceConnected 层层调用，通知绑定完成。
 
 <br>
+
 跨进程通信过程：
 
 ![](https://guoke24.top/img/%E8%B7%A8%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%E8%BF%87%E7%A8%8B.png?cache-bust=1583133356438)
 
 # 测试了接口不一致，不会报错
 * server 端的 IBookManager接口，函数声明为：
+
 ```
 package com.guohao.aidl.server;
 interface IBookManager {
@@ -386,6 +395,7 @@ interface IBookManager {
 ```
 
 * client 端的 IBookManager接口，函数声明为：
+
 ```
 
 interface IBookManager {
