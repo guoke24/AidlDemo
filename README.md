@@ -1,4 +1,5 @@
 # Contents
+
 [TOC]
 
 
@@ -408,3 +409,11 @@ interface IBookManager {
 ```
 
 * 结果：绑定服务不会报错，调用 wrong_add 函数也不会报错，缺失的参数 num2 默认为 0
+
+<br>
+
+# 拓展
+
+[Android系统服务(SystemService)简介](https://cloud.tencent.com/developer/article/1600478) ，参考该文章，可以改造该 demo，把服务端添加到 systemserver 中；而客户端通过 ContextImpl 和 SystemServiceRegistry 静态注册，这样，**每个 APP 都能通过 Context（ContextImpl）获取服务的代理类，然后跟服务通讯。**
+
+由此推论，SystemServiceRegistry 类是每个进程都有一个，静态代码块中创建并保存了很多注册在 SystemServer 中的服务的代理类，因为这些服务都是运行在 SystemServer 中，只要开着机就会一直存在，而每个进程（APP）可以很方便的通过 Context（ContextImpl） 获取其代理类（也称为客户端）。
